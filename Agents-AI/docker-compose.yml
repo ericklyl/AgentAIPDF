@@ -1,0 +1,32 @@
+version: '3'
+services:
+  
+  api:
+    build: .
+    container_name: pdf-blog-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./pdfs:/app/pdfs
+      - ./resultados:/app/resultados
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    restart: unless-stopped
+
+  
+  sonarqube:
+    image: sonarqube:9.9-community
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_extensions:/opt/sonarqube/extensions
+
+volumes:
+  sonarqube_data:
+  sonarqube_logs:
+  sonarqube_extensions:
